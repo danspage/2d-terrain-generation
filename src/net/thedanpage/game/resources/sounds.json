@@ -1,0 +1,11 @@
+{
+  "jump": {
+    "sound": "player/jump"
+  },
+  "footsteps": {
+    "sounds": [
+      "player/footsteps_1",
+      "player/footsteps_2"
+    ]
+  }
+}

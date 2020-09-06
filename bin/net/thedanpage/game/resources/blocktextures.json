@@ -1,0 +1,20 @@
+{
+  "block_null": "blocks/null",
+  "block_dirt": "blocks/dirt",
+  "block_grass": "blocks/grass",
+  "block_stone": "blocks/stone",
+  "block_diamond_ore": "blocks/diamond_ore",
+  "block_coal_ore": "blocks/coal_ore",
+  "block_iron_ore": "blocks/iron_ore",
+  "block_water": [
+    "blocks/water/water_1",
+    "blocks/water/water_2",
+    "blocks/water/water_3",
+    "blocks/water/water_4",
+    "blocks/water/water_5",
+    "blocks/water/water_6",
+    "blocks/water/water_7",
+    "blocks/water/water_8",
+    "blocks/water/water_9"
+  ]
+}

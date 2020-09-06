@@ -1,0 +1,42 @@
+{
+  "null": {
+    "texture": "block_null",
+    "isFluid": false,
+    "animated": false
+  },
+  "dirt": {
+    "texture": "block_dirt",
+    "isFluid": false,
+    "animated": false
+  },
+  "grass": {
+    "texture": "block_grass",
+    "isFluid": false,
+    "animated": false
+  },
+  "stone": {
+    "texture": "block_stone",
+    "isFluid": false,
+    "animated": false
+  },
+  "diamond_ore": {
+    "texture": "block_diamond_ore",
+    "isFluid": false,
+    "animated": false
+  },
+  "coal_ore": {
+    "texture": "block_coal_ore",
+    "isFluid": false,
+    "animated": false
+  },
+  "iron_ore": {
+    "texture": "block_iron_ore",
+    "isFluid": false,
+    "animated": false
+  },
+  "water": {
+    "texture": "block_water",
+    "isFluid": true,
+    "animated": true
+  }
+}

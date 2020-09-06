@@ -1,0 +1,27 @@
+{
+    "player": [
+        "entities/player/walking_1",
+        "entities/player/walking_2",
+        "entities/player/walking_3",
+        "entities/player/walking_4",
+        "entities/player/walking_5",
+        "entities/player/walking_6",
+        "entities/player/walking_7",
+        "entities/player/walking_8",
+        "entities/player/walking_9",
+        "entities/player/walking_10",
+        "entities/player/walking_11",
+        "entities/player/walking_12",
+        "entities/player/walking_13",
+        "entities/player/jumping",
+        "entities/player/arm_low",
+        "entities/player/arm_medium",
+        "entities/player/arm_high"
+    ],
+    "sun": [
+        "misc/sun/sun_1",
+        "misc/sun/sun_2",
+        "misc/sun/sun_3",
+        "misc/sun/sun_4"
+    ]
+}
