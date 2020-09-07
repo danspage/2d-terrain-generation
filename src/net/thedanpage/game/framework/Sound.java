@@ -34,7 +34,7 @@ public class Sound {
 	 * 
 	 * Example: <code>public Sound("player/jump");</code>
 	 * 
-	 * @param fileNames
+	 * @param fileName
 	 */
 	public Sound(String fileName) {
 		try {
@@ -69,7 +69,7 @@ public class Sound {
 	}
 	
 	/**
-	 * Play the sound at its original volume.
+	 * Play the sound at its original volume
 	 */
 	public void play() {
 		if (this.isRandomized) {

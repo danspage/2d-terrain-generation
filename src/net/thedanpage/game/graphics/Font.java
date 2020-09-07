@@ -36,21 +36,35 @@ public class Font {
 		// Loads the font's png texture from the fonts folder
 		Texture tex = new Texture("fonts/" + fontName + ".png");
 
+		/*
+		 * Get charsWide and charsTall by dividing (image width/height)/(char
+		 * width/height)
+		 */
 		int charsWide = tex.getWidth() / charWidth;
 		int charsTall = tex.getHeight() / charHeight;
 
+		/*
+		 * First dimension: the index of each character. Second dimension: the pixel
+		 * data for each character, stored as 0's and 1's.
+		 */
 		charTextures = new int[charsWide * charsTall][charWidth * charHeight];
 
+		// Get the raw pixel data from the font image
 		int[] fontmap = tex.getPixels();
+
+		// Iterate through each character
 		for (int charX = 0; charX < charsWide; charX++) {
 			for (int charY = 0; charY < charsTall; charY++) {
 
+				// Iterate through each pixel of the character on the image
 				for (int x = charX; x < (charX * charWidth) + charWidth; x++) {
 					for (int y = charY; y < (charY * charHeight) + charHeight; y++) {
 
+						// If the pixel is pure white, set the pixel in charTextures to 1
 						if (fontmap[x + y * tex.getWidth()] == 0xffffff)
 							charTextures[charX + charY * charsWide][x % this.charWidth
 									+ (y % this.charHeight) * charWidth] = 1;
+						// Otherwise, set the pixel to 0
 						else
 							charTextures[charX + charY * charsWide][x % this.charWidth
 									+ (y % this.charHeight) * charWidth] = 0;
@@ -61,20 +75,12 @@ public class Font {
 		}
 	}
 
-	/**
-	 * Returns the width of characters in a font
-	 * 
-	 * @return character width
-	 */
+	/** Returns the width of characters in a font */
 	int getCharWidth() {
 		return this.charWidth;
 	}
 
-	/**
-	 * Returns the height of characters in a font
-	 * 
-	 * @return character height
-	 */
+	/** Returns the height of characters in a font */
 	int getCharHeight() {
 		return this.charHeight;
 	}

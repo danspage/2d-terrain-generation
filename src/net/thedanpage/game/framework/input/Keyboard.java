@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * The game's key listener class, used to process keyboard input using KeyEvents.
+ * The game's key listener class, used to process {@link KeyEvent} inputs.
  * 
  * @author Dan
  *

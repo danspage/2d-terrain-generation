@@ -48,7 +48,6 @@ public class Sky {
 		}
 
 		// Progress the sun texture state every 6 game updates
-
 		if (Game.getTicks() % 6 == 0) {
 			sunTextureState++;
 			if (sunTextureState > 3)

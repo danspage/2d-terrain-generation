@@ -9,7 +9,7 @@ package net.thedanpage.game.framework;
 public class Constants {
 	
 	/**
-	 * The direction that a player is facing in
+	 * The direction that an entity is facing in
 	 */
 	public static final int FACING_LEFT=0, FACING_RIGHT=1;
 	

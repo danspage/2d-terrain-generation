@@ -15,7 +15,7 @@ import java.util.Map;
 public class Fonts {
 
 	/**
-	 * A hashmap used to assign each allowed character to a number value
+	 * A hashmap used to index each allowed character to a number value
 	 */
 	private static Map<Character, Integer> charList = new HashMap<Character, Integer>();
 
