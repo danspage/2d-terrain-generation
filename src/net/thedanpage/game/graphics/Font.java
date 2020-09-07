@@ -1,5 +1,8 @@
 package net.thedanpage.game.graphics;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A font object, used for drawing characters on the screen. Each font's texture
  * file is located in resources/images/fonts/(fontname).png, and assigned a name
@@ -13,12 +16,16 @@ package net.thedanpage.game.graphics;
  *
  */
 public class Font {
+	
+	static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,;:?!-_'#\"\\/{}() ";
 
 	// The width and height of each individual character
 	private int charWidth, charHeight;
-
-	// The pixel data of each individual character in the font
-	private int[][] charTextures;
+	
+	/**
+	 * Storage for character textures, referenced by their respective char
+	 */
+	private Map<Character, int[]> charTextures = new HashMap<Character, int[]>();
 
 	/**
 	 * A font used for drawing strings to the game.
@@ -43,57 +50,59 @@ public class Font {
 		int charsWide = tex.getWidth() / charWidth;
 		int charsTall = tex.getHeight() / charHeight;
 
-		/*
-		 * First dimension: the index of each character. Second dimension: the pixel
-		 * data for each character, stored as 0's and 1's.
-		 */
-		charTextures = new int[charsWide * charsTall][charWidth * charHeight];
-
 		// Get the raw pixel data from the font image
 		int[] fontmap = tex.getPixels();
 
+		// Counts the number of the texture so that we can get its matching character
+		int charIndex=0;
 		// Iterate through each character
-		for (int charX = 0; charX < charsWide; charX++) {
-			for (int charY = 0; charY < charsTall; charY++) {
-
+		for (int charY = 0; charY < charsTall; charY++) {
+			for (int charX = 0; charX < charsWide; charX++) {
+				
+				// Temporarily stores the pixel data for each character
+				int[] charTexture = new int[charWidth*charHeight];
+				
 				// Iterate through each pixel of the character on the image
 				for (int x = charX; x < (charX * charWidth) + charWidth; x++) {
 					for (int y = charY; y < (charY * charHeight) + charHeight; y++) {
 
-						// If the pixel is pure white, set the pixel in charTextures to 1
+						// If the pixel is pure white, set the pixel in charTexture to 1
 						if (fontmap[x + y * tex.getWidth()] == 0xffffff)
-							charTextures[charX + charY * charsWide][x % this.charWidth
-									+ (y % this.charHeight) * charWidth] = 1;
+							charTexture[x % this.charWidth
+										+ (y % this.charHeight) * charWidth] = 1;
 						// Otherwise, set the pixel to 0
 						else
-							charTextures[charX + charY * charsWide][x % this.charWidth
-									+ (y % this.charHeight) * charWidth] = 0;
+							charTexture[x % this.charWidth
+										+ (y % this.charHeight) * charWidth] = 0;
 					}
 				}
+				
+				// Transfer charTexture to charTextures
+				charTextures.put(CHARS.charAt(charIndex), charTexture);
+				
+				charIndex ++;
 
 			}
 		}
 	}
 
 	/** Returns the width of characters in a font */
-	int getCharWidth() {
+	public int getCharWidth() {
 		return this.charWidth;
 	}
 
 	/** Returns the height of characters in a font */
-	int getCharHeight() {
+	public int getCharHeight() {
 		return this.charHeight;
 	}
 
 	/**
-	 * Returns an array containing the binary texture data of each character in the
+	 * Returns an array containing the binary texture data of a character in the
 	 * font. If the RGB pixel data for drawing images is desired,
 	 * {@link Fonts#charDataToPixelArray} should be used in tandem.
-	 * 
-	 * @return
 	 */
-	int[][] getCharTextures() {
-		return this.charTextures;
+	public int[] getCharTexture(char c) {
+		return this.charTextures.get(c);
 	}
 
 }

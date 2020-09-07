@@ -12,14 +12,14 @@ public class Block {
 
 	/**
 	 * The size of a single block in pixels. Default is 8, but it can be set to a
-	 * lower number to scale the terrain down (or a higher number if the texture
-	 * png size is increased).
+	 * lower number to scale the terrain down (or a higher number if the texture png
+	 * size is increased).
 	 */
 	public static final int BLOCK_SIZE = 8;
 
 	/** The block's X coordinate */
 	private int x;
-	
+
 	/** The block's Y coordinate */
 	private int y;
 
@@ -28,7 +28,7 @@ public class Block {
 
 	/** Block texture name */
 	private String texture = "block_null";
-	
+
 	/** Whether the block is a fluid or not. (currently unused) */
 	private boolean isFluid = false;
 
@@ -41,8 +41,8 @@ public class Block {
 		this.isFluid = (Boolean) Blocks.getProperty(blockName, "isFluid");
 	}
 
-	
 	Texture textureTemp;
+
 	/** Returns the block's texture in an RGB integer array */
 	public int[] getTexture() {
 		textureTemp = Textures.getBlockTexture(this.texture);
@@ -77,7 +77,7 @@ public class Block {
 	public void update() {
 	}
 
-	/** Draws the block to the screen */
+	/** Draws the block to the screen, accounting for the screen offset */
 	public void draw() {
 		Graphics.drawImage(this.x * BLOCK_SIZE + Game.screen.getScreenOffsetX(),
 				Game.screen.getHeight() - this.y * BLOCK_SIZE - BLOCK_SIZE + Game.screen.getScreenOffsetY(), BLOCK_SIZE,

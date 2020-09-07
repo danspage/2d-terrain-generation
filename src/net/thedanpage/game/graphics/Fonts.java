@@ -15,27 +15,14 @@ import java.util.Map;
 public class Fonts {
 
 	/**
-	 * A hashmap used to index each allowed character to a number value
-	 */
-	private static Map<Character, Integer> charList = new HashMap<Character, Integer>();
-
-	/**
 	 * A HashMap containing all of the game's fonts
 	 */
 	private static Map<String, Font> fonts = new HashMap<String, Font>();
 
 	/**
-	 * A list of all allowed characters, in order of how they appear on font
-	 * textures (left to right, top to bottom)
-	 */
-	private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,;:?!-_'#\"\\/{}() ";
-
-	/**
 	 * Instantiates {@link #charList} and loads all fonts
 	 */
 	public static void init() {
-		for (int i = 0; i < CHARS.length(); i++)
-			charList.put(CHARS.charAt(i), i);
 
 		loadFonts();
 	}
@@ -90,10 +77,10 @@ public class Fonts {
 	 * function
 	 */
 	private static void drawChar(Font font, char c, int x, int y, int color) throws Exception {
-		if (!CHARS.contains(new Character(c).toString()))
+		if (!Font.CHARS.contains(new Character(c).toString()))
 			throw new Exception("The input string contained an invalid character: " + c);
 		Graphics.drawImage(x, y, font.getCharWidth(), font.getCharHeight(),
-				charDataToPixelArray(font.getCharTextures()[CHARS.indexOf(c)], color));
+				charDataToPixelArray(font.getCharTexture(c), color));
 	}
 
 	/**
@@ -107,7 +94,7 @@ public class Fonts {
 	 */
 	public static void drawString(String string, String font, int x, int y, int color) {
 		try {
-			// Get the font based on the reference nae
+			// Get the font based on the reference name
 			Font f = fonts.get(font);
 
 			// Draw each character of the string, with one pixel of space in between each

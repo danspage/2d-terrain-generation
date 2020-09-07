@@ -69,5 +69,14 @@ public class Keyboard implements KeyListener {
 	// Unused, but has to be included as an implementation of KeyListener
 	public void keyTyped(KeyEvent e) {
 	}
+	
+	/**
+	 * Releases all keys. This is triggered when the window loses focus.
+	 */
+	public void releaseAll() {
+		for (int i=0; i<keys.length; i++) {
+			keys[i] = false;
+		}
+	}
 
 }

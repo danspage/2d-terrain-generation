@@ -12,7 +12,8 @@ import net.thedanpage.game.Game;
 import net.thedanpage.game.framework.Util;
 
 /**
- * A class for managing and loading blocks and their properties.
+ * A class for managing and loading blocks and their properties. Block
+ * properties are located in <code>resources/blockproperties.json</code>
  * 
  * @author Dan
  *
@@ -22,8 +23,12 @@ public class Blocks {
 	/** A Hashmap containing a list of blocks and their properties */
 	private static Map<String, Object[]> blockProperties = new HashMap<String, Object[]>();
 
-
-	/** Block animation timer for cycling block textures */
+	/**
+	 * Block animation timer for cycling block textures. {@link net.thedanpage.game.graphics.Texture#init()}
+	 * sets BLOCK_ANIM_TIMER_LENGTH to a multiple of all unique block animation
+	 * lengths. This is done so that one timer can be used for every animation,
+	 * while allowing them to seamlessly loop.
+	 */
 	public static int BLOCK_ANIM_TIMER_LENGTH = 0;
 	private static int blockAnimTimer = 0;
 	private static final int BLOCK_ANIM_TIME = 4;
@@ -56,7 +61,6 @@ public class Blocks {
 		} else if (property == "isFluid") {
 			return blockProperties.get(blockName)[1];
 		}
-
 		return null;
 	}
 

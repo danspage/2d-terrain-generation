@@ -2,6 +2,12 @@ package net.thedanpage.game.graphics;
 
 import net.thedanpage.game.world.map.Map;
 
+/**
+ * A class with functions used to draw to the game's canvas
+ * 
+ * @author Dan
+ *
+ */
 public class Screen {
 
 	private int width, height;

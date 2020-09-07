@@ -117,7 +117,11 @@ public class Textures {
 			e.printStackTrace();
 		}
 
-		// Set blockAnimTimer to a multiple of all the different block animation lengths
+		/*
+		 * Set BLOCK_ANIM_TIMER_LENGTH to a multiple of all unique block animation
+		 * lengths. This is done so that one timer can be used for every animation,
+		 * while allowing them to seamlessly loop.
+		 */
 		List<Integer> animTextureFramesList = new ArrayList<Integer>();
 		blockTextures.keySet().forEach(key -> {
 			if (blockTextures.get(key) instanceof AnimatedTexture) {

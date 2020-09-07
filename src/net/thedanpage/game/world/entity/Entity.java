@@ -127,7 +127,7 @@ public class Entity {
 	}
 
 	/**
-	 * Returns the entity's current pixel so they can be drawn to the screen
+	 * Returns the entity's current pixels so they can be drawn to the screen
 	 * 
 	 * @param flipHorizontal Optionally flip the texture horizontally
 	 * @param flipVertical Optionally flip the texture vertically
@@ -150,7 +150,7 @@ public class Entity {
 	}
 
 	/**
-	 * Returns the entity's current pixel so they can be drawn to the screen
+	 * Returns the entity's current pixels so they can be drawn to the screen
 	 * 
 	 * @param frame desired frame of the animated texture
 	 * @param flipHorizontal Optionally flip the texture horizontally
@@ -184,7 +184,7 @@ public class Entity {
 	}
 
 	/**
-	 * Draws the entity to the screen, depending on its facing direction.
+	 * Draws the entity to the screen, accounting for its facing direction
 	 * 
 	 * @throws Exception
 	 */
