@@ -21,7 +21,7 @@ import net.thedanpage.game.framework.Util;
 public class Blocks {
 
 	/** A Hashmap containing a list of blocks and their properties */
-	private static Map<String, Object[]> blockProperties = new HashMap<String, Object[]>();
+	public static Map<String, Object[]> blockProperties = new HashMap<String, Object[]>();
 
 	/**
 	 * Block animation timer for cycling block textures. {@link net.thedanpage.game.graphics.Texture#init()}
@@ -46,8 +46,7 @@ public class Blocks {
 			jsonObject.keySet().forEach(key -> {
 				String texture = (String) ((JSONObject) jsonObject.get(key)).get("texture");
 				boolean isFluid = (Boolean) ((JSONObject) jsonObject.get(key)).get("isFluid");
-				boolean animated = (Boolean) ((JSONObject) jsonObject.get(key)).get("animated");
-				blockProperties.put((String) key, new Object[] { texture, isFluid, animated });
+				blockProperties.put((String) key, new Object[] { texture, isFluid });
 			});
 		} catch (Exception e) {
 			e.printStackTrace();

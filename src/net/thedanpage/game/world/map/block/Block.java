@@ -3,6 +3,7 @@ package net.thedanpage.game.world.map.block;
 import java.awt.geom.Rectangle2D;
 
 import net.thedanpage.game.Game;
+import net.thedanpage.game.framework.Util;
 import net.thedanpage.game.graphics.AnimatedTexture;
 import net.thedanpage.game.graphics.Graphics;
 import net.thedanpage.game.graphics.Texture;
@@ -32,7 +33,10 @@ public class Block {
 	/** Whether the block is a fluid or not. (currently unused) */
 	private boolean isFluid = false;
 
-	public Block(int x, int y, String blockName) {
+	/** Whether the block is highlighted or not, used for mouseovers */
+	private boolean highlighted = false;
+	
+	Block(int x, int y, String blockName) {
 		this.x = x;
 		this.y = y;
 
@@ -47,8 +51,8 @@ public class Block {
 	public int[] getTexture() {
 		textureTemp = Textures.getBlockTexture(this.texture);
 		if (textureTemp instanceof AnimatedTexture) {
-			return ((AnimatedTexture) textureTemp)
-					.getPixels(Blocks.getBlockAnimTime() % ((AnimatedTexture) textureTemp).getNumFrames());
+			return (int[]) Util.deepClone(((AnimatedTexture) textureTemp)
+					.getPixels(Blocks.getBlockAnimTime() % ((AnimatedTexture) textureTemp).getNumFrames()));
 		}
 		return textureTemp.getPixels();
 	}
@@ -68,6 +72,10 @@ public class Block {
 	public int getY() {
 		return this.y;
 	}
+	
+	public boolean isHighlighted() {
+		return highlighted;
+	}
 
 	/** Returns the block's hitbox */
 	public Rectangle2D.Double getBounds() {
@@ -75,13 +83,18 @@ public class Block {
 	}
 
 	public void update() {
+		this.highlighted = false;
 	}
 
 	/** Draws the block to the screen, accounting for the screen offset */
 	public void draw() {
-		Graphics.drawImage(this.x * BLOCK_SIZE + Game.screen.getScreenOffsetX(),
-				Game.screen.getHeight() - this.y * BLOCK_SIZE - BLOCK_SIZE + Game.screen.getScreenOffsetY(), BLOCK_SIZE,
+		Graphics.drawImage(this.x*BLOCK_SIZE + Game.screen.getScreenOffsetX(),
+				Game.screen.getHeight() - this.y*BLOCK_SIZE - BLOCK_SIZE + Game.screen.getScreenOffsetY(), BLOCK_SIZE,
 				BLOCK_SIZE, this.getTexture());
+	}
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
 	}
 
 }

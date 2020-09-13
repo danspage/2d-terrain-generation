@@ -18,6 +18,11 @@ import java.util.Map;
 public class Font {
 	
 	static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,;:?!-_'#\"\\/{}() ";
+	
+	public static final int
+	ALIGN_LEFT = 0,
+	ALIGN_CENTER = 1,
+	ALIGN_RIGHT = 2;
 
 	// The width and height of each individual character
 	private int charWidth, charHeight;

@@ -1,6 +1,6 @@
 package net.thedanpage.game.graphics;
 
-import net.thedanpage.game.world.map.Map;
+import net.thedanpage.game.GameEngine;
 
 /**
  * A class with functions used to draw to the game's canvas
@@ -34,7 +34,7 @@ public class Screen {
 	}
 
 	public void render() {
-		Map.render();
+		GameEngine.render();
 	}
 
 	public int getWidth() {
@@ -52,6 +52,14 @@ public class Screen {
 		if (y < 0 || y >= height)
 			return;
 		pixels[x + y * width] = color;
+	}
+	
+	public int getPixel(int x, int y) {
+		if (x < 0 || x >= width)
+			return -1;
+		if (y < 0 || y >= height)
+			return -1;
+		return pixels[x + y * width];
 	}
 
 	/** Fills the background with a color, using an RGB integer */

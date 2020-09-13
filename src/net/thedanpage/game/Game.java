@@ -11,15 +11,10 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
-import net.thedanpage.game.framework.Constants;
-import net.thedanpage.game.framework.Sounds;
-import net.thedanpage.game.framework.Util;
 import net.thedanpage.game.framework.input.Keyboard;
-import net.thedanpage.game.graphics.Fonts;
+import net.thedanpage.game.framework.input.MouseActions;
 import net.thedanpage.game.graphics.Screen;
-import net.thedanpage.game.graphics.Textures;
-import net.thedanpage.game.world.map.Map;
-import net.thedanpage.game.world.map.block.Blocks;
+import net.thedanpage.game.world.physics.Constants;
 
 /**
  * This is the main class of the game, which controls the game look, and runs
@@ -76,7 +71,7 @@ public class Game extends Canvas implements Runnable {
 	/**
 	 * Controls whether the game loop is running or not.
 	 */
-	private boolean running = false;
+	private static boolean running = false;
 
 	/**
 	 * The time between updates, used to make sure that operations in the world
@@ -156,14 +151,8 @@ public class Game extends Canvas implements Runnable {
 	 * second.
 	 */
 	public void run() {
-
-		// Initialization
-		Util.init();
-		Textures.init();
-		Blocks.loadProperties();
-		Map.init();
-		Sounds.init();
-		Fonts.init();
+		// Initialize the game engine
+		GameEngine.init();
 
 		// End of initialization
 		System.out.println("Initialization complete.");
@@ -210,13 +199,8 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void update() {
-
-		// Update the keyboard class (for I/O)
-		keyboard.update();
-
-		// Update the map. This is everything that has to do with the world and the
-		// player.
-		Map.update();
+		GameEngine.handleEvents();
+		GameEngine.update();
 
 		// Increase the game's update count tracker by 1
 		ticks++;
@@ -227,6 +211,9 @@ public class Game extends Canvas implements Runnable {
 	 * Reads the pixel data from {@link #pixels} and renders it to the game window.
 	 */
 	public void render() {
+		// Draw pixels to the screen from within the game
+		GameEngine.render();
+
 		// Not too sure what this does. I copied it from the youtube video that the game
 		// loop code came from.
 		BufferStrategy bs = getBufferStrategy();
@@ -283,6 +270,12 @@ public class Game extends Canvas implements Runnable {
 		return ticks;
 	}
 
+	public static void quit() {
+		running = false;
+		System.out.println("Application closed.");
+		System.exit(0);
+	}
+
 	/**
 	 * A WindowFocusListener used to release all keys when the window has lost focus
 	 */
@@ -297,9 +290,12 @@ public class Game extends Canvas implements Runnable {
 		}
 	};
 
+	// The instance of this class used for the window
+	public static Game game;
+
 	// Instantiate the game, set the JFrame properties, and start it running
 	public static void main(String[] args) {
-		Game game = new Game();
+		game = new Game();
 
 		game.frame.setResizable(false);
 		game.frame.setTitle(TITLE);
@@ -308,8 +304,9 @@ public class Game extends Canvas implements Runnable {
 		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		game.frame.setLocationRelativeTo(null);
 		game.frame.setVisible(true);
-		game.frame.setAlwaysOnTop(true);
-		game.frame.setAlwaysOnTop(false);
+		game.addMouseListener(new MouseActions());
+
+		game.requestFocus();
 
 		game.frame.addWindowFocusListener(lostFocusAction);
 

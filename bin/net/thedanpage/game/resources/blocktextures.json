@@ -16,5 +16,8 @@
     "blocks/water/water_7",
     "blocks/water/water_8",
     "blocks/water/water_9"
-  ]
+  ],
+  "block_planks": "blocks/planks",
+  "block_log": "blocks/log",
+  "block_leaves": "blocks/leaves"
 }

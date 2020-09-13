@@ -1,7 +1,11 @@
 package net.thedanpage.game.world.map;
 
+import java.awt.geom.Rectangle2D;
+
 import net.thedanpage.game.Game;
+import net.thedanpage.game.graphics.Graphics;
 import net.thedanpage.game.world.map.block.Block;
+import net.thedanpage.game.world.map.terrain.TerrainGen;
 
 /**
  * A rectangle of blocks, with a width of {@link #CHUNK_WIDTH} and a height of
@@ -52,8 +56,13 @@ public class Chunk {
 	 * Returns a block at a given coordinate in the world, without having to go
 	 * through chunks
 	 */
-	public Block getBlock(int worldX, int worldY) {
-		return blocks[worldX % CHUNK_WIDTH][worldY];
+	public Block getBlock(int x, int y) {
+		return blocks[x % CHUNK_WIDTH][y];
+	}
+	
+	/** Sets the block at a specified coordinate */
+	public void setBlock(Block block, int x, int y) {
+		blocks[x % CHUNK_WIDTH][y] = block;
 	}
 
 	/** Updates all blocks in the chunk */
@@ -71,10 +80,13 @@ public class Chunk {
 		int minRenderHeight = (Game.screen.getScreenOffsetY()) / Block.BLOCK_SIZE;
 		int maxRenderHeight = (Game.screen.getScreenOffsetY() + Game.screen.getHeight()) / Block.BLOCK_SIZE + 1;
 
-		for (Block[] column : blocks) {
+		for (int x=0; x<blocks.length; x++) {
 			for (int y = minRenderHeight; y < maxRenderHeight; y++) {
-				if (y >= 0 && y < column.length && column[y] != null)
-					column[y].draw();
+				if (y >= 0 && y < blocks[x].length && blocks[x][y] != null)
+					blocks[x][y].draw();
+					if (blocks[x][y] != null && blocks[x][y].isHighlighted()) {
+						Graphics.highlightRectangleBlockCoords(new Rectangle2D.Double(this.x + x,y,1,1));
+					}
 			}
 		}
 	}

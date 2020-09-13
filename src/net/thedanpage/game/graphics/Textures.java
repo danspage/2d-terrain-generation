@@ -135,7 +135,7 @@ public class Textures {
 			else
 				Blocks.BLOCK_ANIM_TIMER_LENGTH *= animTextureFramesList.get(i);
 		}
-
+		
 	}
 
 	/** Returns a texture based on its reference name */

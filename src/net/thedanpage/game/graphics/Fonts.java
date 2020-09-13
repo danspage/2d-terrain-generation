@@ -30,7 +30,7 @@ public class Fonts {
 	/**
 	 * Loads an individual font
 	 * 
-	 * @param font        the file name of the font. For example,
+	 * @param fontPath    the file name of the font. For example,
 	 *                    <code>resources/images/fonts/myfont.png</code> would
 	 *                    become "myfont".
 	 * @param charWidth   the width of each character, in pixels
@@ -38,8 +38,8 @@ public class Fonts {
 	 * @param storageName the name that the font will be referenced by when it is
 	 *                    accessed
 	 */
-	private static void loadFont(String font, int charWidth, int charHeight, String storageName) {
-		fonts.put(storageName, new Font(font, charWidth, charHeight));
+	private static void loadFont(String fontPath, int charWidth, int charHeight, String storageName) {
+		fonts.put(storageName, new Font(fontPath, charWidth, charHeight));
 	}
 
 	/**
@@ -47,6 +47,8 @@ public class Fonts {
 	 */
 	private static void loadFonts() {
 		loadFont("tiny", 3, 5, "tinyfont");
+		loadFont("large", 5, 7, "largefont");
+		loadFont("doublelarge", 10, 14, "doublelargefont");
 	}
 
 	/**
@@ -76,32 +78,53 @@ public class Fonts {
 	 * Draws a character on screen, for use only with the {@link #drawString}
 	 * function
 	 */
-	private static void drawChar(Font font, char c, int x, int y, int color) throws Exception {
+	private static int[] getCharPixels(Font font, char c, int color) throws Exception {
 		if (!Font.CHARS.contains(new Character(c).toString()))
 			throw new Exception("The input string contained an invalid character: " + c);
-		Graphics.drawImage(x, y, font.getCharWidth(), font.getCharHeight(),
-				charDataToPixelArray(font.getCharTexture(c), color));
+		return charDataToPixelArray(font.getCharTexture(c), color);
 	}
 
 	/**
 	 * Draws a string onto the screen using a specified font, and a specified color.
 	 * 
-	 * @param string the string to be drawn
-	 * @param font   the reference name of any font
-	 * @param x      an x position on the screen to draw at
-	 * @param y      a y position on the screen to draw at
-	 * @param color  a color to fill the characters with, in RBG integer format
+	 * @param string    the string to be drawn
+	 * @param font      the reference name of any font
+	 * @param x         an x position on the screen to draw at
+	 * @param y         a y position on the screen to draw at
+	 * @param color     a color to fill the characters with, in RBG integer format
+	 * @param alignment the alignment of the text, determined by a Font.ALIGN...
+	 *                  constant
 	 */
-	public static void drawString(String string, String font, int x, int y, int color) {
+	public static void drawString(String string, String font, int x, int y, int color, int alignment) {
 		try {
 			// Get the font based on the reference name
 			Font f = fonts.get(font);
 
-			// Draw each character of the string, with one pixel of space in between each
-			// one
+			Texture stringTex = new Texture((f.getCharWidth() + 1) * string.length() - 1, f.getCharHeight());
+
+			/*
+			 * Draw each character to the string texture, with one pixel of space in between
+			 * each one
+			 */
 			for (int i = 0; i < string.length(); i++) {
-				drawChar(f, string.charAt(i), x + i * (f.getCharWidth() + 1), y, color);
+				stringTex.drawImageToTexture(
+						new Texture(getCharPixels(f, string.charAt(i), color), f.getCharWidth(), f.getCharHeight()),
+						i * (f.getCharWidth() + 1), 0);
 			}
+
+			switch (alignment) {
+			
+			case Font.ALIGN_LEFT:
+				break;
+			case Font.ALIGN_CENTER:
+				x -= stringTex.getWidth() / 2;
+				break;
+			case Font.ALIGN_RIGHT:
+				x -= stringTex.getWidth();
+				
+			}
+
+			Graphics.drawImage(x, y, stringTex.getWidth(), stringTex.getHeight(), stringTex.getPixels());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

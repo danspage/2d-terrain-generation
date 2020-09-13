@@ -8,11 +8,11 @@ import javax.imageio.ImageIO;
 import net.thedanpage.game.framework.Util;
 
 public class Texture {
-
+	
 	private int width;
 	private int height;
 	private int[] pixels;
-
+	
 	public Texture() {
 	}
 
@@ -62,6 +62,50 @@ public class Texture {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Creates an new texture directly from an array of RGB data
+	 * 
+	 * @param width  the texture's width
+	 * @param height the texture's height
+	 * @param pixels an array of RGB integers
+	 */
+	public Texture(int[] pixels, int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.pixels = pixels;
+	}
+	
+	/**
+	 * Creates an empty texture with a specified width and height
+	 * 
+	 * @param width the texture's width
+	 * @param height the texture's height
+	 */
+	public Texture(int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.pixels = new int[width*height];
+		
+		// Fill the pixels with transparency
+		for (int i=0; i<this.pixels.length; i++) this.pixels[i] = -1;
+	}
+
+	/**
+	 * Draws a set of pixels to a texture, at a given x and y coordinate
+	 */
+	public void drawImageToTexture(Texture image, int x, int y) {
+		for (int px = x; px < x+image.getWidth(); px++) {
+			for (int py = y; py < x+image.getHeight(); py++) {
+
+				if (py > this.getHeight())
+					break;
+
+				if (px >= 0 && py >= 0 && px < this.getWidth() && py < this.getHeight())
+					this.setPixel(px, py, image.getPixels()[px-x + (py-y) * image.getWidth()]);
+			}
 		}
 	}
 

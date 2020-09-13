@@ -1,13 +1,15 @@
 package net.thedanpage.game.world.entity;
 
 import net.thedanpage.game.Game;
-import net.thedanpage.game.framework.Constants;
 import net.thedanpage.game.framework.Sounds;
 import net.thedanpage.game.framework.Util;
 import net.thedanpage.game.graphics.AnimatedTexture;
+import net.thedanpage.game.graphics.Font;
 import net.thedanpage.game.graphics.Fonts;
 import net.thedanpage.game.graphics.Graphics;
+import net.thedanpage.game.world.map.Map;
 import net.thedanpage.game.world.map.block.Block;
+import net.thedanpage.game.world.physics.Constants;
 
 public class Player extends Entity {
 	
@@ -36,7 +38,7 @@ public class Player extends Entity {
 	/** Makes the player jump, and plays the jumping sound */
 	public void jump() {
 		this.setVelocityY(JUMP_STRENGTH);
-		Sounds.play("jump");
+		Sounds.play("jump", false);
 	}
 	
 	@Override
@@ -46,6 +48,7 @@ public class Player extends Entity {
 	
 	@Override
 	public void update() {
+		
 		// Movement based on keys and whether the player is flying
 		if (this.flying) {
 			if (Game.keyboard.left) this.setVelocityX(-FLY_SPEED);
@@ -72,12 +75,12 @@ public class Player extends Entity {
 		}
 		
 		// Facing direction
-		if (this.getVelocityX() < 0) this.setFacing(Constants.FACING_LEFT);
-		else if (this.getVelocityX() > 0) this.setFacing(Constants.FACING_RIGHT);
+		if (this.getVelocityX() < 0) this.setFacing(FACING_LEFT);
+		else if (this.getVelocityX() > 0) this.setFacing(FACING_RIGHT);
 		
 		// Footstep sound
 		if (!this.flying && this.walkingTime != 0 && this.walkingTime % 19 == 0) {
-			Sounds.play("footsteps", 0.13);
+			Sounds.play("footsteps", 0.13, false);
 		}
 		
 		// Update onGround
@@ -108,16 +111,18 @@ public class Player extends Entity {
 	@Override
 	public void draw() {
 		try {
-			if (this.getFacing() == Constants.FACING_LEFT)
+			if (this.getFacing() == FACING_LEFT)
 				Graphics.drawImage((int)(this.getX()*Block.BLOCK_SIZE)+Game.screen.getScreenOffsetX(), Game.screen.getHeight()-(int)(this.getY()*Block.BLOCK_SIZE)-this.getTexture().getHeight(animationCounter/4)+Game.screen.getScreenOffsetY(), this.getTexture().getWidth(animationCounter/4), this.getTexture().getHeight(animationCounter/4), this.getDrawPixels(animationCounter/4, false, false));
-			else
+			else if (this.getFacing() == FACING_RIGHT)
 				Graphics.drawImage((int)(this.getX()*Block.BLOCK_SIZE)+Game.screen.getScreenOffsetX(), Game.screen.getHeight()-(int)(this.getY()*Block.BLOCK_SIZE)-this.getTexture().getHeight(animationCounter/4)+Game.screen.getScreenOffsetY(), this.getTexture().getWidth(animationCounter/4), this.getTexture().getHeight(animationCounter/4), this.getDrawPixels(animationCounter/4, true, false));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		Fonts.drawString("Player X: " + Util.formatDoubleForString(this.getX()), "tinyfont", 2, 29, 0xffff00);
-		Fonts.drawString("Player Y: " + Util.formatDoubleForString(this.getY()), "tinyfont", 2, 35, 0xffff00);
+		Fonts.drawString("Player X: " + Util.formatDoubleForString(this.getX()), "tinyfont", 2, 29, 0xffff00, Font.ALIGN_LEFT);
+		Fonts.drawString("Player Y: " + Util.formatDoubleForString(this.getY()), "tinyfont", 2, 35, 0xffff00, Font.ALIGN_LEFT);
+		
+		if (Map.isShowingHitboxes()) Graphics.drawRectangle(this.getBounds(), 0x00ffff, true);
 	}
 
 	public boolean getFlying() {

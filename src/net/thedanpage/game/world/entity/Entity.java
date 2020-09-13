@@ -3,14 +3,18 @@ package net.thedanpage.game.world.entity;
 import java.awt.geom.Rectangle2D;
 
 import net.thedanpage.game.Game;
-import net.thedanpage.game.framework.Constants;
 import net.thedanpage.game.graphics.AnimatedTexture;
 import net.thedanpage.game.graphics.Graphics;
 import net.thedanpage.game.graphics.Texture;
 import net.thedanpage.game.graphics.Textures;
+import net.thedanpage.game.world.map.Chunk;
+import net.thedanpage.game.world.map.Map;
 import net.thedanpage.game.world.map.block.Block;
 
 public class Entity {
+	
+	/** The direction that the entity is facing in */
+	protected static final int FACING_LEFT=0, FACING_RIGHT=1;
 
 	/** The entity's texture */
 	protected Texture sprite;
@@ -34,7 +38,7 @@ public class Entity {
 	private double height = 0;
 
 	/** The direction that the entity is facing */
-	private int facing = Constants.FACING_RIGHT;
+	private int facing = FACING_RIGHT;
 
 	/** Whether the entity is on the ground or not */
 	private boolean onGround = false;
@@ -190,7 +194,7 @@ public class Entity {
 	 */
 	public void draw() throws Exception {
 		try {
-			if (this.facing == Constants.FACING_LEFT)
+			if (this.facing == FACING_LEFT)
 				Graphics.drawImage((int) (this.getX() * Block.BLOCK_SIZE) - this.getTexture().getWidth() / 2,
 						Game.screen.getHeight() - (int) (this.getY() * Block.BLOCK_SIZE)
 								- this.getTexture().getHeight(),
@@ -218,7 +222,7 @@ public class Entity {
 				if (!(this.sprite instanceof AnimatedTexture))
 					throw new Exception("This entity does not have an animated sprite");
 
-				if (this.facing == Constants.FACING_LEFT)
+				if (this.facing == FACING_LEFT)
 					Graphics.drawImage((int) (this.getX()),
 							Game.screen.getHeight() - (int) (this.getY() * Block.BLOCK_SIZE)
 									- this.getTexture().getHeight(),
@@ -243,15 +247,22 @@ public class Entity {
 	/** Processes collision of the entity with the world bounds */
 	protected void doCollision() {
 
-		// World bounds
+		// Bottom world bound
+		if (this.getY() < 0) {
+			this.setY(0);
+			this.setVelocityY(0);
+		}
+		
+		// Left world bound
 		if (this.getX() < 0) {
 			this.setX(0);
 			this.setVelocityX(0);
 		}
-
-		if (this.getY() < 0) {
-			this.setY(0);
-			this.setVelocityY(0);
+		
+		// Right world bound
+		if (this.getX() + this.getWidth()/Block.BLOCK_SIZE/2 > Map.MAP_SIZE_CHUNKS*Chunk.CHUNK_WIDTH - 2) {
+			this.setX(Map.MAP_SIZE_CHUNKS*Chunk.CHUNK_WIDTH - this.getWidth()/Block.BLOCK_SIZE/2 - 2);
+			this.setVelocityX(0);
 		}
 
 	}

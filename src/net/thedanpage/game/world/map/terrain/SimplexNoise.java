@@ -1,4 +1,4 @@
-package net.thedanpage.game.framework;
+package net.thedanpage.game.world.map.terrain;
 
 /**
  * A speed-improved simplex noise algorithm for 2D, 3D and 4D in Java.

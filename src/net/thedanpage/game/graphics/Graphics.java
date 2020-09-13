@@ -52,6 +52,24 @@ public class Graphics {
 	}
 
 	/**
+	 * Draws a {@link Texture} object directly to the screen, tiled vertically and
+	 * horizontally, and starting from (x,y)
+	 * 
+	 * @param texture a texture object
+	 */
+	public static void drawTextureTiled(int x, int y, Texture texture) {
+		while (x > 0)
+			x -= texture.getWidth();
+		while (y > 0)
+			y -= texture.getHeight();
+		for (int px = x; px < Game.WIDTH; px += texture.getWidth()) {
+			for (int py = y; py < Game.HEIGHT; py += texture.getHeight()) {
+				drawImage(px, py, texture.getWidth(), texture.getHeight(), texture.getPixels());
+			}
+		}
+	}
+
+	/**
 	 * Flips an array of RGB pixel data horizontally.
 	 * 
 	 * @param width  width of the image in pixels
@@ -68,7 +86,7 @@ public class Graphics {
 		}
 		return newImg;
 	}
-	
+
 	/**
 	 * Flips an array of RGB pixel data vertically.
 	 * 
@@ -136,5 +154,86 @@ public class Graphics {
 			}
 		}
 	}
+
+	/**
+	 * Draws a filled rectangle to the screen.
+	 * 
+	 * @param rect           a {@link Rectangle2D}.Double object
+	 * @param color          the color of the rectangle
+	 * @param useBlockCoords specifies whether the rectangle's coordinates are
+	 *                       relative to the screen, or relative to blocks in the
+	 *                       world
+	 */
+	public static void fillRectangle(Rectangle2D.Double rect, int color, boolean useBlockCoords) {
+		int rectX, rectY, rectW, rectH;
+
+		// Draw the rectangle based on block coordinates, using the screen offset, and
+		// scaling up to block coordinates
+		if (useBlockCoords) {
+			rectX = (int) (rect.getX() * Block.BLOCK_SIZE);
+			rectY = (int) (rect.getY() * Block.BLOCK_SIZE);
+			rectW = (int) (rect.getWidth() * Block.BLOCK_SIZE);
+			rectH = (int) (rect.getHeight() * Block.BLOCK_SIZE);
+
+			for (int x = rectX; x < rectX + rectW; x++) {
+				for (int y = rectY; y < rectY + rectH; y++) {
+					Game.screen.setPixel(Game.screen.getScreenOffsetX() + x,
+							Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1), color);
+				}
+			}
+		} else {
+			// Draw the rectangle normally using screen coordinates
+			rectX = (int) rect.getX();
+			rectY = (int) rect.getY();
+			rectW = (int) rect.getWidth();
+			rectH = (int) rect.getHeight();
+
+			for (int x = rectX; x < rectX + rectW; x++) {
+				for (int y = rectY; y < rectY + rectH; y++) {
+					Game.screen.setPixel(x, Game.screen.getHeight() - (y + 1), color);
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * Highlights a rectangle on the screen, relative to block coordinates.
+	 * 
+	 * @param rect           a {@link Rectangle2D}.Double object
+	 * @param color          the color of the rectangle
+	 * @param useBlockCoords specifies whether the rectangle's coordinates are
+	 *                       relative to the screen, or relative to blocks in the
+	 *                       world
+	 */
+	public static void highlightRectangleBlockCoords(Rectangle2D.Double rect) {
+		int rectX, rectY, rectW, rectH;
+
+		// Draw the rectangle based on block coordinates, using the screen offset, and
+		// scaling up to block coordinates
+		rectX = (int) (rect.getX() * Block.BLOCK_SIZE);
+		rectY = (int) (rect.getY() * Block.BLOCK_SIZE);
+		rectW = (int) (rect.getWidth() * Block.BLOCK_SIZE);
+		rectH = (int) (rect.getHeight() * Block.BLOCK_SIZE);
+
+		int r, g, b, rgbInt;
+		for (int x = rectX; x < rectX + rectW; x++) {
+			for (int y = rectY; y < rectY + rectH; y++) {
+				rgbInt = Game.screen.getPixel(Game.screen.getScreenOffsetX() + x, Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1));
+				r = (rgbInt >> 16) & 255;
+				g = (rgbInt >> 8) & 255;
+				b = rgbInt & 255;
+				r *= 1.3;
+				g *= 1.3;
+				b *= 1.3;
+				if (r > 255) r = 255;
+				if (g > 255) g = 255;
+				if (b > 255) b = 255;
+				
+				Game.screen.setPixel(Game.screen.getScreenOffsetX() + x,
+						Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1),
+						(r << 16) + (g << 8) + b);
+			}
+		}}
 
 }

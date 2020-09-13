@@ -1,17 +1,12 @@
-package net.thedanpage.game.framework;
+package net.thedanpage.game.world.physics;
 
 /**
- * A class containing various constants for the game
+ * A class containing various physics related constants
  * 
  * @author Dan
  *
  */
 public class Constants {
-	
-	/**
-	 * The direction that an entity is facing in
-	 */
-	public static final int FACING_LEFT=0, FACING_RIGHT=1;
 	
 	/**
 	 * Gravity strength

@@ -1,14 +1,21 @@
 package net.thedanpage.game.world.map;
 
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import net.thedanpage.game.Game;
+import net.thedanpage.game.GameEngine;
+import net.thedanpage.game.graphics.Font;
 import net.thedanpage.game.graphics.Fonts;
+import net.thedanpage.game.graphics.Graphics;
 import net.thedanpage.game.world.entity.Entity;
 import net.thedanpage.game.world.entity.Player;
 import net.thedanpage.game.world.map.block.Block;
+import net.thedanpage.game.world.map.block.BlockFactory;
 import net.thedanpage.game.world.map.block.Blocks;
 
 public class Map {
@@ -21,7 +28,7 @@ public class Map {
 	/**
 	 * The maximum number of chunks the map will create
 	 */
-	public static final int MAP_SIZE_CHUNKS = 100;
+	public static final int MAP_SIZE_CHUNKS = 200;
 
 	/**
 	 * An ArrayList containing all entities in the world
@@ -47,6 +54,18 @@ public class Map {
 
 	private static int chunkRenderMin, chunkRenderMax;
 
+	/** Controls whether the player's hitbox is showing or not */
+	private static boolean showHitboxes = false;
+
+	/**
+	 * A list of blocks that are cycled through for choosing which one will be
+	 * placed
+	 */
+	public static List<String> placeBlockList = new ArrayList<String>();
+
+	/** Used for cycling through which blocks will be placed */
+	public static int currentPlaceBlockIndex = 0;
+	
 	/**
 	 * Returns a {@link Chunk} object based on its index in {@link #chunks}
 	 * 
@@ -119,6 +138,17 @@ public class Map {
 		// Instantiate the chunks. They are NOT generated upon creation
 		for (int i = 0; i < MAP_SIZE_CHUNKS; i++)
 			chunks.add(i, new Chunk(i * Chunk.CHUNK_WIDTH));
+
+		// Make sure hitboxes are not showing
+		setShowingHitboxes(false);
+		
+		// Initialize the list of blocks that can be placed
+		for (Entry<String, Object[]> entry : Blocks.blockProperties.entrySet()) {
+			placeBlockList.add(entry.getKey());
+		}
+		placeBlockList.remove(placeBlockList.indexOf("null"));
+		
+		currentPlaceBlockIndex = 0;
 	}
 
 	public static void update() {
@@ -141,6 +171,10 @@ public class Map {
 
 		// Update the sky
 		Sky.update();
+
+		// Highlight the block at the mouse
+		if (Map.getBlockAtScreenPos(GameEngine.getMousePos().x, GameEngine.getMousePos().y) != null)
+			Map.getBlockAtScreenPos(GameEngine.getMousePos().x, GameEngine.getMousePos().y).setHighlighted(true);
 	}
 
 	public static void render() {
@@ -179,18 +213,89 @@ public class Map {
 		}
 
 		// Show various information on the top left of the screen
-		Fonts.drawString("Ups:" + Game.getCurrentUps() + " Fps:" + Game.getCurrentFps(), "tinyfont", 2, 2, 0xffff00);
-		Fonts.drawString("Space: Toggle flying", "tinyfont", 2, 8, 0xffff00);
-		Fonts.drawString("Seed:" + seed, "tinyfont", 2, 14, 0xffff00);
+		Fonts.drawString("Ups:" + Game.getCurrentUps() + " Fps:" + Game.getCurrentFps(), "tinyfont", 2, 2, 0xffff00,
+				Font.ALIGN_LEFT);
+		Fonts.drawString("Space: Toggle flying", "tinyfont", 2, 8, 0xffff00, Font.ALIGN_LEFT);
+		Fonts.drawString("Seed:" + seed, "tinyfont", 2, 14, 0xffff00, Font.ALIGN_LEFT);
 
 		numGeneratedChunks = 0;
 		for (int i = 0; i < chunks.size(); i++)
 			if (chunks.get(i).isGenerated())
 				numGeneratedChunks++;
-		Fonts.drawString("Generated chunks:" + numGeneratedChunks, "tinyfont", 2, 20, 0xffff00);
+		Fonts.drawString("Generated chunks:" + numGeneratedChunks, "tinyfont", 2, 20, 0xffff00, Font.ALIGN_LEFT);
 
-		Fonts.drawString("Movement:WASD", "tinyfont", 2, 44, 0xffff00);
+		Fonts.drawString("Movement:WASD/Arrows", "tinyfont", 2, 44, 0xffff00, Font.ALIGN_LEFT);
+		Fonts.drawString("H: Toggle hitboxes", "tinyfont", 2, 50, 0xffff00, Font.ALIGN_LEFT);
+		Fonts.drawString("Esc:Exit to menu", "tinyfont", 2, 56, 0xffff00, Font.ALIGN_LEFT);
+		
+		Fonts.drawString("Cycle block: U/I", "tinyfont", 2, 69, 0xffff00, Font.ALIGN_LEFT);
+		
+		// Show the selected block on the top left menu
+		Fonts.drawString("Current block:", "tinyfont", 2, 78, 0xffff00, Font.ALIGN_LEFT);
+		Graphics.fillRectangle(new Rectangle2D.Double(58, 140, 10, 10), 0xffff00, false);
+		Graphics.drawImage(59, 76, Block.BLOCK_SIZE, Block.BLOCK_SIZE, BlockFactory.createBlock(0,0,placeBlockList.get(currentPlaceBlockIndex)).getTexture());
+		
+		Fonts.drawString("Left click: Remove", "tinyfont", 2, 85, 0xffff00, Font.ALIGN_LEFT);
+		Fonts.drawString("Right click: Place", "tinyfont", 2, 91, 0xffff00, Font.ALIGN_LEFT);
+		
+		
+	}
 
+	public static boolean isShowingHitboxes() {
+		return showHitboxes;
+	}
+
+	public static void setShowingHitboxes(boolean showHitboxes) {
+		Map.showHitboxes = showHitboxes;
+	}
+
+	/** Returns the block at a specific position on the screen */
+	public static Block getBlockAtScreenPos(int screenX, int screenY) {
+		// Inverse of x coordinate from Block.draw
+		int blockX = (int) ((screenX - Game.screen.getScreenOffsetX()) / Block.BLOCK_SIZE);
+		// Inverse of y coordinate from Block.draw
+		int blockY = (int) ((-screenY + Game.screen.getHeight() + Game.screen.getScreenOffsetY()) / Block.BLOCK_SIZE);
+
+		if (blockX >= 0 && blockX < MAP_SIZE_CHUNKS * Chunk.CHUNK_WIDTH && blockY >= 0 && blockY < Map.MAP_HEIGHT) {
+			return getChunkAtBlock(blockX).getBlock(blockX, blockY);
+		}
+		return null;
+	}
+
+	/** Returns the block at a specific position on the screen */
+	public static Point getBlockCoordsAtScreenPos(int screenX, int screenY) {
+		// Inverse of x coordinate from Block.draw
+		int blockX = (int) ((screenX - Game.screen.getScreenOffsetX()) / Block.BLOCK_SIZE);
+		// Inverse of y coordinate from Block.draw
+		int blockY = (int) ((-screenY + Game.screen.getHeight() + Game.screen.getScreenOffsetY()) / Block.BLOCK_SIZE);
+
+		if (blockX >= 0 && blockX < MAP_SIZE_CHUNKS * Chunk.CHUNK_WIDTH && blockY >= 0 && blockY < Map.MAP_HEIGHT) {
+			return new Point(blockX, blockY);
+		}
+		return null;
+	}
+
+	/** Gets the block at a specified coordinate */
+	public static Block getBlock(int x, int y) {
+		if (x>=0 && x<MAP_SIZE_CHUNKS*Chunk.CHUNK_WIDTH && y>=0 && y<MAP_HEIGHT)
+			return getChunkAtBlock(x).getBlock(x, y);
+		return null;
+	}
+
+	/** Sets the block at a specified coordinate */
+	public static void setBlock(Block block, int x, int y) {
+		if (x>=0 && x<MAP_SIZE_CHUNKS*Chunk.CHUNK_WIDTH && y>=0 && y<MAP_HEIGHT)
+			getChunkAtBlock(x).setBlock(block, x, y);
+	}
+	
+	public static void cyclePlaceBlockIndexBack() {
+		currentPlaceBlockIndex --;
+		if (currentPlaceBlockIndex < 0) currentPlaceBlockIndex = placeBlockList.size()-1;
+	}
+	
+	public static void cyclePlaceBlockIndexForward() {
+		currentPlaceBlockIndex ++;
+		if (currentPlaceBlockIndex >= placeBlockList.size()) currentPlaceBlockIndex = 0;
 	}
 
 }

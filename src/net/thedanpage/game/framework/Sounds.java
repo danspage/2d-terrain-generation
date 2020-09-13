@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -65,6 +66,13 @@ public class Sounds {
 				}
 				
 			});
+			
+			/*
+			 * Play each sound at zero volume so that they're buffered and don't lag the first time
+			 */
+			for (Entry<String, Sound> sound : sounds.entrySet()) {
+				sound.getValue().play(0);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,10 +83,11 @@ public class Sounds {
 	 * 
 	 * @param sound The name that the sound is referenced by
 	 */
-	public static void play(String sound) {
+	public static void play(String sound, boolean loop) {
 		try {
 			if (sounds.containsKey(sound)) {
-				sounds.get(sound).play();
+				if (loop) sounds.get(sound).loop();
+				else sounds.get(sound).play();
 			} else {
 				throw new Exception("The sound '" + sound + "' does not exist.");
 			}
@@ -93,10 +102,24 @@ public class Sounds {
 	 * @param sound The name that the sound is referenced by
 	 * @param volume Any double from 0 to 1, with 1 being normal volume
 	 */
-	public static void play(String sound, double volume) {
+	public static void play(String sound, double volume, boolean loop) {
 		try {
 			if (sounds.containsKey(sound)) {
-				sounds.get(sound).play(volume);
+				if (loop) sounds.get(sound).loop(volume);
+				else sounds.get(sound).play(volume);
+			} else {
+				throw new Exception("The sound '" + sound + "' does not exist.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/** Stops a specified sound */
+	public static void stop(String sound) {
+		try {
+			if (sounds.containsKey(sound)) {
+				sounds.get(sound).stop();
 			} else {
 				throw new Exception("The sound '" + sound + "' does not exist.");
 			}
