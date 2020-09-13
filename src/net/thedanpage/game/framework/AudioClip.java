@@ -56,6 +56,7 @@ class AudioClip {
 	public void loop() {
 		new Thread() {
 			public void run() {
+				clip.setMicrosecondPosition(0);
 				clip.loop(Clip.LOOP_CONTINUOUSLY);
 				try {
 					Thread.sleep(999999999);

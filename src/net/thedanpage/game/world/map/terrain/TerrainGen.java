@@ -1,15 +1,11 @@
 package net.thedanpage.game.world.map.terrain;
 
-import java.util.Random;
-
 import net.thedanpage.game.world.map.Chunk;
 import net.thedanpage.game.world.map.Map;
 import net.thedanpage.game.world.map.block.Block;
 import net.thedanpage.game.world.map.block.BlockFactory;
 
 public class TerrainGen {
-	
-	private static Random random = new Random();
 	
 	public static Block[][] generateChunk(int x0, int seed) {
 		
@@ -32,9 +28,15 @@ public class TerrainGen {
 				
 				// Stone and minerals
 				else {
-					if (random.nextInt(100) == 1) blocks[x][y] = BlockFactory.createBlock(x0+x,y,"coal_ore");
-					else if (random.nextInt(200) == 1) blocks[x][y] = BlockFactory.createBlock(x0+x,y,"iron_ore");
-					else if (y <= 5 && random.nextInt(1000) == 1) blocks[x][y] = BlockFactory.createBlock(x0+x,y,"diamond_ore");
+					if ((SimplexNoise.noise(x0+x, y, seed)+3)*100 > 368 && (SimplexNoise.noise(x0+x, y+10000, seed)+3)*100 > 368)
+						blocks[x][y] = BlockFactory.createBlock(x0+x,y,"coal_ore");
+					
+					else if ((SimplexNoise.noise(x0+x+100, y, seed)+3)*100 > 376.35 && (SimplexNoise.noise(x0+x+100, y+10000, seed)+3)*100 > 376.35)
+						blocks[x][y] = BlockFactory.createBlock(x0+x,y,"iron_ore");
+					
+					else if (y <= 5 && (SimplexNoise.noise(x0+x+200, y, seed)+3)*100 > 381.5 && (SimplexNoise.noise(x0+x+200, y+10000, seed)+3)*100 > 381.5)
+						blocks[x][y] = BlockFactory.createBlock(x0+x,y,"diamond_ore");
+					
 					else blocks[x][y] = BlockFactory.createBlock(x0+x,y,"stone");
 				}
 				
