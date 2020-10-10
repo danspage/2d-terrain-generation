@@ -14,6 +14,8 @@ import net.thedanpage.game.framework.Util;
  *
  */
 public class AnimatedTexture extends Texture {
+	
+	private static final long serialVersionUID = -5582175552004790148L;
 
 	/**
 	 * An array containing pixel data for each frame. The first dimension specifies

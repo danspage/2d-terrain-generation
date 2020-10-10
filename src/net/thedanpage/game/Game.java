@@ -3,6 +3,7 @@ package net.thedanpage.game;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferStrategy;
@@ -14,7 +15,7 @@ import javax.swing.JFrame;
 import net.thedanpage.game.framework.input.Keyboard;
 import net.thedanpage.game.framework.input.MouseActions;
 import net.thedanpage.game.graphics.Screen;
-import net.thedanpage.game.world.physics.Constants;
+import net.thedanpage.game.world.physics.PhysicsConstants;
 
 /**
  * This is the main class of the game, which controls the game look, and runs
@@ -27,24 +28,22 @@ import net.thedanpage.game.world.physics.Constants;
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
-	// Defining basic information regarding the properties of the game window.
-
-	/**
-	 * The width of the game window
-	 */
-	public static final int WIDTH = 400;
-
-	/**
-	 * The height of the game window, calculated relative to the window's width
-	 */
-	public static final int HEIGHT = WIDTH / 16 * 9;
-
 	/**
 	 * This is how large the game's pixels should be scaled. For example, a scale of
 	 * 4 would mean that each pixel in {@link pixels} will appear as a 4x4 square of
 	 * pixels when rendered.
 	 */
 	public static final int SCALE = 3;
+
+	/**
+	 * The width of the game window
+	 */
+	public static final int WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()/5);
+
+	/**
+	 * The height of the game window, calculated relative to the window's width
+	 */
+	public static final int HEIGHT = WIDTH / 16 * 9;
 
 	/**
 	 * The title used for the application window.
@@ -246,7 +245,7 @@ public class Game extends Canvas implements Runnable {
 	 * @return time since the last game update
 	 */
 	public static double getDelta() {
-		return delta * Constants.DELTA_MULT;
+		return delta * PhysicsConstants.DELTA_MULT;
 	}
 
 	/**
@@ -299,6 +298,8 @@ public class Game extends Canvas implements Runnable {
 
 		game.frame.setResizable(false);
 		game.frame.setTitle(TITLE);
+//		game.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//		game.frame.setUndecorated(true);
 		game.frame.add(game);
 		game.frame.pack();
 		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

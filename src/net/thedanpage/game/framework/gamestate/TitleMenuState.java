@@ -33,8 +33,8 @@ public class TitleMenuState extends BaseGameState {
 	public void render() {
 		Graphics.drawTextureTiled(moveBG, moveBG, Textures.getTexture("titlebg"));
 		
-		Fonts.drawString("Press ESC to close the game", "tinyfont", 2, 2, 0xffbb00, Font.ALIGN_LEFT);
 		Fonts.drawString("Press enter to begin.", "doublelargefont", Game.WIDTH/2, Game.HEIGHT/2 - 7, 0xffff00, Font.ALIGN_CENTER);
+		Fonts.drawString("(Press ESC to close the game)", "tinyfont", Game.WIDTH/2, Game.HEIGHT/2 + 20, 0xffbb00, Font.ALIGN_CENTER);
 	}
 
 	@Override

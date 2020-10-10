@@ -120,5 +120,13 @@ public class Util {
 	public static Object deepClone(Object obj) {
 		return cloner.deepClone(obj);
 	}
+	
+	public static float lerp(float a, float b, float f) {
+	    return a + f * (b - a);
+	}
+	
+	public static float mapFloat(float num, float r1Min, float r1Max, float r2Min, float r2Max) {
+		return (num-r1Min)/(r1Max-r1Min) * (r2Max-r2Min) + r2Min;
+	}
 
 }

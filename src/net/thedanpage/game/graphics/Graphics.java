@@ -3,6 +3,7 @@ package net.thedanpage.game.graphics;
 import java.awt.geom.Rectangle2D;
 
 import net.thedanpage.game.Game;
+import net.thedanpage.game.framework.Util;
 import net.thedanpage.game.world.map.block.Block;
 
 /**
@@ -195,8 +196,7 @@ public class Graphics {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Highlights a rectangle on the screen, relative to block coordinates.
 	 * 
@@ -219,21 +219,69 @@ public class Graphics {
 		int r, g, b, rgbInt;
 		for (int x = rectX; x < rectX + rectW; x++) {
 			for (int y = rectY; y < rectY + rectH; y++) {
-				rgbInt = Game.screen.getPixel(Game.screen.getScreenOffsetX() + x, Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1));
+				rgbInt = Game.screen.getPixel(Game.screen.getScreenOffsetX() + x,
+						Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1));
 				r = (rgbInt >> 16) & 255;
 				g = (rgbInt >> 8) & 255;
 				b = rgbInt & 255;
 				r *= 1.3;
 				g *= 1.3;
 				b *= 1.3;
-				if (r > 255) r = 255;
-				if (g > 255) g = 255;
-				if (b > 255) b = 255;
-				
+				if (r > 255)
+					r = 255;
+				if (g > 255)
+					g = 255;
+				if (b > 255)
+					b = 255;
+
 				Game.screen.setPixel(Game.screen.getScreenOffsetX() + x,
-						Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1),
-						(r << 16) + (g << 8) + b);
+						Game.screen.getScreenOffsetY() + Game.screen.getHeight() - (y + 1), (r << 16) + (g << 8) + b);
 			}
-		}}
+		}
+	}
+
+	/**
+	 * Applies lighting to a texture based on a double, with 0 being completely
+	 * black and 1 being normal lightness.
+	 */
+	public static int[] applyLighting(int[] pixels, float lightLevel) {
+		lightLevel = Util.mapFloat(lightLevel, 0, 1, 0.1f, 1);
+		if (lightLevel < 0 || lightLevel > 1)
+			throw new IllegalArgumentException(Float.toString(lightLevel));
+
+		int[] newPix = (int[]) Util.deepClone(pixels);
+		int r, g, b;
+		for (int i = 0; i < pixels.length; i++) {
+			if (newPix[i] != -1) {
+				r = (int) (((newPix[i] >> 16) & 255) * lightLevel);
+				g = (int) (((newPix[i] >> 8) & 255) * lightLevel);
+				b = (int) ((newPix[i] & 255) * lightLevel);
+	
+				newPix[i] = (r << 16) + (g << 8) + b;
+			}
+		}
+
+		return newPix;
+	}
+
+	/**
+	 * Applies lighting to the screen based on a double, with 0 being completely
+	 * black and 1 being normal lightness.
+	 */
+	public static void applyScreenLightness(float lightLevel) {
+		lightLevel = Util.mapFloat(lightLevel, 0, 1, 0.1f, 1);
+		if (lightLevel < 0 || lightLevel > 1)
+			throw new IllegalArgumentException(Float.toString(lightLevel));
+		int r, g, b;
+		for (int x = 0; x < Game.screen.getWidth(); x++) {
+			for (int y = 0; y < Game.screen.getHeight(); y++) {
+				r = (int) ((int) ((Game.screen.getPixel(x, y) >> 16) & 255) * lightLevel);
+				g = (int) ((int) ((Game.screen.getPixel(x, y) >> 8) & 255) * lightLevel);
+				b = (int) ((int) (Game.screen.getPixel(x, y) & 255) * lightLevel);
+				
+				Game.screen.setPixel(x, y, (r << 16) + (g << 8) + b);
+			}
+		}
+	}
 
 }

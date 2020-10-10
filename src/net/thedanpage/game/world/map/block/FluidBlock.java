@@ -5,6 +5,8 @@ import net.thedanpage.game.world.map.Map;
 
 public class FluidBlock extends Block {
 	
+	private static final long serialVersionUID = -2119516562195847271L;
+
 	private static final int SPREAD_TIME = 5;
 	
 	static final int
@@ -23,18 +25,18 @@ public class FluidBlock extends Block {
 	}
 	
 	@Override
-	public void update() {
-		super.update();
+	public void update(Map map) {
+		super.update(map);
 		
 		if (Game.getTicks() % SPREAD_TIME == 0) {
 			
-			if (Map.getBlock(this.getX(), this.getY()-1) == null) {
-				Map.setBlock(new FluidBlock(this.getX(), this.getY()-1, this.getBlockType(), SOURCE_DIR_UP), this.getX(), this.getY()-1);
+			if (map.getBlock(this.getX(), this.getY()-1) == null) {
+				map.setBlock(new FluidBlock(this.getX(), this.getY()-1, this.getBlockType(), SOURCE_DIR_UP), this.getX(), this.getY()-1);
 			}
 			
 			
-			if (this.sourceDir == SOURCE_DIR_UP && (Map.getBlock(this.getX(), this.getY()+1) == null || Map.getBlock(this.getX(), this.getY()+1).getBlockType() != "water")) {
-				Map.setBlock(null, this.getX(), this.getY());
+			if (this.sourceDir == SOURCE_DIR_UP && (map.getBlock(this.getX(), this.getY()+1) == null || map.getBlock(this.getX(), this.getY()+1).getBlockType() != "water")) {
+				map.setBlock(null, this.getX(), this.getY());
 			}
 			
 		}

@@ -5,7 +5,8 @@
   "footsteps": {
     "sounds": [
       "player/footsteps_1",
-      "player/footsteps_2"
+      "player/footsteps_2",
+      "player/footsteps_3"
     ]
   },
   "menu_music": {

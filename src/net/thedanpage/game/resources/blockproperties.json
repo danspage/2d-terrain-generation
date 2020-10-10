@@ -1,46 +1,74 @@
 {
   "null": {
     "texture": "block_null",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "dirt": {
     "texture": "block_dirt",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "grass": {
     "texture": "block_grass",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "stone": {
     "texture": "block_stone",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "diamond_ore": {
     "texture": "block_diamond_ore",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "coal_ore": {
     "texture": "block_coal_ore",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "iron_ore": {
     "texture": "block_iron_ore",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "water": {
     "texture": "block_water",
-    "isFluid": true
+    "isFluid": true,
+    "translucencyGroup": "liquid",
+    "isLightSource": false
   },
   "planks": {
     "texture": "block_planks",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "log": {
     "texture": "block_log",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "solid",
+    "isLightSource": false
   },
   "leaves": {
     "texture": "block_leaves",
-    "isFluid": false
+    "isFluid": false,
+    "translucencyGroup": "leaves",
+    "isLightSource": false
+  },
+  "lava": {
+    "texture": "block_lava",
+    "isFluid": true,
+    "translucensyGroup": "notTranslucent",
+    "isLightSource": true
   }
 }

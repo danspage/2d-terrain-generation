@@ -1,6 +1,7 @@
 package net.thedanpage.game.world.entity;
 
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
 import net.thedanpage.game.Game;
 import net.thedanpage.game.graphics.AnimatedTexture;
@@ -10,9 +11,13 @@ import net.thedanpage.game.graphics.Textures;
 import net.thedanpage.game.world.map.Chunk;
 import net.thedanpage.game.world.map.Map;
 import net.thedanpage.game.world.map.block.Block;
+import net.thedanpage.game.world.physics.PhysicsConstants;
+import net.thedanpage.game.world.physics.collision.CollideBlocks;
 
-public class Entity {
+public abstract class Entity implements Serializable {
 	
+	private static final long serialVersionUID = -1876686422787412282L;
+
 	/** The direction that the entity is facing in */
 	protected static final int FACING_LEFT=0, FACING_RIGHT=1;
 
@@ -24,6 +29,12 @@ public class Entity {
 
 	/** The entity's Y position in the world */
 	private double y = 0;
+	
+	/** The entity's previous X position in the world */
+	private double prevX = 0;
+	
+	/** The entity's previous Y position in the world */
+	private double prevY = 0;
 
 	/** The entity's X velocity */
 	private double velX = 0;
@@ -43,7 +54,7 @@ public class Entity {
 	/** Whether the entity is on the ground or not */
 	private boolean onGround = false;
 
-	/** Constants used for grouping entities and iterating through them */
+	/** PhysicsConstants used for grouping entities and iterating through them */
 	public static final int ENTITY_GROUP_EVERYTHING = 0, ENTITY_GROUP_PLAYERS = 1;
 
 	public Entity(String sprite) {
@@ -120,14 +131,21 @@ public class Entity {
 		return this.onGround;
 	}
 
-	protected void updateOnGround() {
-		if (this.getY() == 0)
-			this.onGround = true;
-		else
-			this.onGround = false;
+	protected void updateOnGround(Map map) {
+		onGround = false;
+		for (double x=getX(); x<getX()+getWidth()+1; x++) {
+			if (x > getX()+getWidth()) {
+				x = getX() + getWidth();
+				if (map.getBlock((int) x, (int) (getY()-0.0001)) != null && !map.getBlock((int) x, (int) (getY()-0.0001)).isFluid())
+					onGround = true;
+				return;
+			}
+			if (map.getBlock((int) x, (int) (getY()-0.0001)) != null && !map.getBlock((int) x, (int) (getY()-0.0001)).isFluid())
+				onGround = true;
+		}
 	}
 
-	public void update() {
+	public void update(Map map) {
 	}
 
 	/**
@@ -192,7 +210,7 @@ public class Entity {
 	 * 
 	 * @throws Exception
 	 */
-	public void draw() throws Exception {
+	public void draw(boolean showHitbox) throws Exception {
 		try {
 			if (this.facing == FACING_LEFT)
 				Graphics.drawImage((int) (this.getX() * Block.BLOCK_SIZE) - this.getTexture().getWidth() / 2,
@@ -207,6 +225,7 @@ public class Entity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (showHitbox) Graphics.drawRectangle(getBounds(), 0x00ffff, true);
 	}
 
 	/**
@@ -216,7 +235,7 @@ public class Entity {
 	 * 
 	 * @throws Exception
 	 */
-	public void draw(int frame) throws Exception {
+	public void draw(int frame, boolean showHitbox) throws Exception {
 		try {
 			try {
 				if (!(this.sprite instanceof AnimatedTexture))
@@ -240,12 +259,11 @@ public class Entity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		Graphics.drawRectangle(this.getBounds(), 0xffff00, true);
+		if (showHitbox) Graphics.drawRectangle(getBounds(), 0x00ffff, true);
 	}
 
 	/** Processes collision of the entity with the world bounds */
-	protected void doCollision() {
+	protected void doCollision(Map map) {
 
 		// Bottom world bound
 		if (this.getY() < 0) {
@@ -264,7 +282,9 @@ public class Entity {
 			this.setX(Map.MAP_SIZE_CHUNKS*Chunk.CHUNK_WIDTH - this.getWidth()/Block.BLOCK_SIZE/2 - 2);
 			this.setVelocityX(0);
 		}
-
+		
+		CollideBlocks.collideBlocks(map, this);
+		
 	}
 
 	/** Updates the entity's position based on its velocity and the delta time */
@@ -275,8 +295,27 @@ public class Entity {
 		this.setX(this.getX() + newVelX * Game.getDelta());
 		this.setY(this.getY() + newVelY * Game.getDelta());
 
-		this.setVelocityX(newVelX);
-		this.setVelocityY(newVelY);
+		this.setVelocityX(Math.min(newVelX,PhysicsConstants.TERMINAL_VELOCITY));
+		this.setVelocityY(Math.min(newVelY,PhysicsConstants.TERMINAL_VELOCITY));
+		
+		this.setX(Math.floor(this.getX()*1000)/1000);
 	}
 
+	public double getPrevX() {
+		return prevX;
+	}
+
+	public double getPrevY() {
+		return prevY;
+	}
+	
+	public void updatePrevPos() {
+		this.prevX = this.x;
+		this.prevY = this.y;
+	}
+	
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
+	}
+	
 }

@@ -19,5 +19,24 @@
   ],
   "block_planks": "blocks/planks",
   "block_log": "blocks/log",
-  "block_leaves": "blocks/leaves"
+  "block_leaves": "blocks/leaves",
+  "block_lava": [
+    "blocks/lava/lava_1",
+    "blocks/lava/lava_2",
+    "blocks/lava/lava_3",
+    "blocks/lava/lava_4",
+    "blocks/lava/lava_5",
+    "blocks/lava/lava_6",
+    "blocks/lava/lava_7",
+    "blocks/lava/lava_8",
+    "blocks/lava/lava_9",
+    "blocks/lava/lava_10",
+    "blocks/lava/lava_11",
+    "blocks/lava/lava_12",
+    "blocks/lava/lava_13",
+    "blocks/lava/lava_14",
+    "blocks/lava/lava_15",
+    "blocks/lava/lava_16",
+    "blocks/lava/lava_17"
+  ]
 }

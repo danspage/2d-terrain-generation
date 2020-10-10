@@ -2,12 +2,15 @@ package net.thedanpage.game.graphics;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
 import net.thedanpage.game.framework.Util;
 
-public class Texture {
+public class Texture implements Serializable {
+	
+	private static final long serialVersionUID = -3807109838584280480L;
 	
 	private int width;
 	private int height;
